@@ -1,0 +1,104 @@
+16、Linux中文件或者目录的权限管理：
+    1)准备工作：
+      一个用户至少属于一个组，也可以属于多个组；
+      一个文件或者目录也必须属于一个，并且只能属于一个组；
+     在一个文件或者目录看来，linux系统中所有的用户可以分为三类：
+        所有者：
+	同组用户：
+	其它组用户：
+    2)、文件或者目录的三种权限：
+        在linux中，任何文件或者目录都有三种权限：读(Read)、写(Write)、执行(Execute)
+           对于文件而言:
+	       读：可以读取、查看文件的内容， 比如：cat、more、less、head、tail等。
+	       写：可以修改文件的内容，比如：vi或者vim等
+	       执行：如果该文件是可执行文件(.sh)，可以直接运行，比如：./xxx.sh。
+	   对于目录而言：
+	       读：可以读取、查看目录下边的内容，比如：ls等
+	       写：可以修改目录中的内容，创建子目录、删除子目录、创建文件、删除文件、重名文件或者目录
+	       执行：可以进入该目录， 比如：cd等。
+     3)、文件或者目录的权限控制：
+         在linux中，任何一个文件或者目录都有三部分权限：所有者权限、同组用户权限、其它组用户权限。
+	       第一部分权限：所有者权限，文件或者目录的所有者对该文件所拥有的权限，使用r、w、x分表表示读、写、执行的权限。比如：rwx：拥有读写执行的权限，r-x：拥有读和执行的权限，r--：只拥有读的权限，---：没有任何权限。
+	       第二部分权限：同组用户权限，文件或者目录的同组用户对该文件所拥有的权限，使用r、w、x分表表示读、写、执行的权限。
+	       第三部分权限：其它组用户权限，文件或者目录的其它组用户对该文件所拥有的权限，使用r、w、x分表表示读、写、执行的权限。
+     4)、查看文件或者目录的权限：
+	       ls -aul
+     5)、修改文件或者目录的权限：chmod
+               用r、w、x分辨表示读、写、执行的权限，
+	       用u、g、o、a分别表示给所有者、同组用户、其它组用户、所有用户修改权限
+	       用+、-、=分别表示给指定的用户增加、减少、设置对应的权限
+
+	       chmod g-w,o+w t5.txt
+               chmod g=rwx t5.txt
+	       chmod a-r t5.txt
+     6)、使用数字的方式修改文件或者目录的权限：
+               每一个权限可以用一个数字来表示：
+	             r、w、x
+		     4、2、1
+		     2^2 2^1 2^0
+	       每一个文件或者目录都有三部分权限，每一部分权限都可以用一组数据之和来表示，三部分权限就是一组三个数据序列：
+	             rw- r-x r-x
+		     6    5   5
+
+                     rwx r-x -wx
+		     753：
+			
+		     rwxrwxrwx
+	      	     777:
+               chmod 777 t5.txt
+	       chmod 753 t5.txt
+ 
+17、linux中的网络管理：
+    在linux的配置文件： vi /etc/sysconfig/network-scripts/ifcfg-ens33
+
+        BOOTPROTO="static"
+	ONBOOT="yes"
+	IPADDR=192.168.11.128
+	GATEWAY=192.168.11.2
+	DNS=192.168.11.2
+
+    重启linux:  reboot
+       
+ 18、linux中的进程管理：
+    线程：一个程序的线路
+    进程：一个程序的执行，一个进程占用一个端口。
+
+    查看正在运行的进程：ps
+        ps  //只会显示应用进程
+	ps -e //显示所有进程
+	ps -ef //以全格式的形式显示所有进程
+                 //用于查看linux系统中某一些软件或者应用是否处于启动状态
+
+        ps -ef|grep mysql
+    关闭进程：
+        使用ps命令查看进程的PID
+	使用命令kill -9 PID
+       
+19、linux中服务管理：
+    1)、服务介绍：服务是支持Linux运行的一些必要程序，本质上也是进程，叫守护进程。
+    2)、操作服务：systemctl [start|stop|restart|reload|status|enable] 服务名称
+        
+	systemctl status firewalld  查看防火墙运行状态
+	systemctl stop firewalld 关闭防火墙
+	systemctl start firetalld 开启防火墙
+	systemctl enable firewalld 设置防火墙开机启动
+
+	*老版的linux或者有些发行版本的linux，操作服务使用service命令。
+
+20、linux中软件包的管理：软件安装包
+    1)、RPM包管理：
+    a)RPM：一种LInux的软件包的打包和安装工具，它操作的软件包都是.rpm结尾。
+    b)使用RPM：rpm命令。
+      
+      查看当前系统中已经安装的rpm软件包：rpm -qa|grep firefox
+      卸载rpm软件包：rpm -e firefox
+      安装rpm包：rpm -ivh xxx.rpm
+               cp firefox-45.4.0-1.el7.centos.x86_64.rpm /opt
+	       rpm -ivh firefox-45.4.0-1.el7.centos.x86_64.rpm
+    2)、YUM包管理：是一种基于RPM的软件包管理工具，它能够从指定服务器上自动下载RPM包并且自动安装，可以自动处理软件包之间的依赖关系。
+        查看当前系统中已经安装的rpm软件包：yum list installed|grep firefox
+	卸载rpm软件包：yum remove firefox.x86_64
+        安装rpm包：yum install firefox
+
+21、linux中搭建JavaEE开发环境：
+    http://192.168.11.128:8080/

@@ -1,0 +1,120 @@
+11、linux中的文件和目录操作的命令：
+    15)、echo：输出系统变量或者常量的值到命令行终端。
+         echo $JAVA_HOME
+	 echo $PATH
+
+	 echo Hello World!
+
+    JAVA_HOME=D:\DPFS\Java\jdk1.8.0_101
+    PATH=%JAVA_HOME%\bin;.......
+    CLASSPATH=%JAVA_HOME%\lib;.
+    16)把前一个查看命令的结果输出到指定的文件中： 查看命令 > 文件名
+         *如果目标文件不存在,则新建一个文件
+	 *如果目标文件已存在，则把文件以前的内容覆盖
+        ls > ret.txt
+        ls -al > ret.txt
+	cat ret.txt > t3_new.txt 文件内容的复制
+	cat t4.txt > t3_new.txt
+    17)把前一个查看命令的结果追加输出到指定的文件中：查看命令 >> 文件名
+        *如果目标文件不存在,则新建一个文件
+	*如果目标文件已存在，则在文件原来内容的基础上进行追加
+	ls > ret.txt
+	ls -al >> ret.txt
+	cat t4.txt >> ret.txt
+12、linux中关于日期和时间的操作命令：
+    1)、查看或者设置系统的日期或者时间：date
+      date 查看系统当前的完整的日期和时间
+      date +%Y  系统当前的年份
+      date +%m  系统当前的月份
+      date +%d  系统当前的日期
+
+      date '+%Y-%m-%d %H:%M:%S' 按yyyy-MM-dd HH:mm:ss格式显示
+
+      date -S '2020-10-20 10:20:30' 设置当前的系统时间
+    2)、查看系统日历：cal
+      cal：查看当前月份的日历
+      cal 2020：查看指定年份的日历
+
+ 13、linux中关于搜索文件或者目录的命令: 
+     1)find [搜索范围][搜索标准] 关键字
+                                                            |->-name：默认按名称搜索(文件或者目录所在的路径也在搜索范围之内)
+							    |->-size：按文件大小搜索
+							    |->-user：按文件的所有者搜索
+     find *.txt  搜索当前目录下，所有的.txt文件
+     find *e*  搜索当前目录下，所有名称中包含e的那些文件或者目录
+
+     find /etc *.txt  搜索/etc目录下所有.txt文件
+
+     find /etc -size -5k  搜索/etc目录下所有小于5k的文件
+
+     find /etc -user zhangsan  搜索/etc目录下所有的所有者是zhangsan的文件和目录
+
+    2)locate:在整棵目录树中搜索文件或者目录，都是根据名称搜索，效率高。
+      updatedb
+      locate 关键字
+
+      updatedb
+      locate *.txt
+    3)搜索过滤命令，在前一个搜索命令的结果中进行按名称进一步过滤：搜索命令 |grep [选项] 过滤条件 
+                                                                  查看命令 |grep [选项] 过滤条件
+      find *.txt|grep new  搜索当前目录下，所有名称包含new的.txt文件
+      find /etc -size -5k|grep firefox
+
+      cat t1.txt|grep beijing
+      cat t1.txt|grep -ni beijing
+
+      ls -al|grep new
+      
+14、linux中有关压缩和解压的命令：
+    1)、压缩或者解压单个文件：gzip 文件名：压缩单个文件，生成一个.gz的压缩包，并且会把原来的文件删除。
+                              gunzip .gz压缩包名:解压.gz压缩包，并且会把原来的.gz压缩包删除。
+			      
+			      gzip ret.txt
+			      gunzip ret.txt.gz
+    2)、压缩(打包)或者解压多个文件和目录：zip 目标压缩包名称(通常使用.zip压缩包) 文件或者目录列表：
+					  unzip 压缩包名(.zip) -d 解压目录名：将指定的.zip压缩包解压到当前目录(或者指定目录)。
+
+			                  zip test.zip ret.txt t1.txt test2 
+					  unzip test.zip -d test3
+
+					  zip mytest.zip test.zip t3_new.txt t4.txt test2
+    3)、压缩(打包)或者解压多个文件和目录：tar [选项] 目标压缩包名称(xxx.tar.gz) 文件或者目录列表
+                                                 |->c：打包或者压缩
+				          tar [选项] 压缩包名(xxx.tar.gz) -C 解压目录名：将指定的.tar.gz压缩包解压到当期目录(或者指定目录)
+						 |->x: 解压
+				          
+					  tar -zcvf xxx.tar.gz 文件或者目录列表
+					  tar -zxvf xxx.tar.gz -C 解压目录名
+
+                                          tar -zcvf mytar.tar.gz mytest.zip ret.txt t1.txt test2
+					  tar -zxvf mytar.tar.gz -C /opt/testDir/test5
+
+15、文件或者目录与组：
+    1)文件或者目录与组基本介绍:
+      在linux中,每一个用户都至少属于一个组，用户不能独立于组存在，一个用户可以属于多个组。
+
+      在linux中，每一个文件或者目录也必须属于一个组，而且只能属于一个组，默认情况下，文件所有者所属的主组就是文件所属的组；
+      文件或者目录通过组来控制哪些用户可以对它进行哪些操作，即文件或者目录的访问权限;
+      在文件或者目录看来，linux系统中所有的用户分为三类：
+         所有者：默认情况下，文件或者目录的所有者都是创建者，可以修改
+         同组用户：跟文件或者目录属于同一个组的用户
+         其它组用户：既不是文件或者目录的所有者，也不是同组用户
+    2)查看文件的所有者和所在的组：
+      ls -l
+    3)、修改文件或者目录的所有者：chown 新的所有者 文件名或者目录名
+                                  chown 新的所有者:新的组 文件名或者目录名
+       chown zhangsan t1.txt
+       chown -R zhangsan test3
+       chown zhangsan:dev t4.txt
+
+       chown zhangsan:dev test2
+       chown -R zhangsan:dev test2 递归修改目录的所有者和所在的组 
+    4)、修改文件或者目录的所在组：chgrp 新的组 文件名或者目录名
+       chgrp dev t2.txt
+       chgrp -R dev test3
+ 16、
+       
+
+
+       
+

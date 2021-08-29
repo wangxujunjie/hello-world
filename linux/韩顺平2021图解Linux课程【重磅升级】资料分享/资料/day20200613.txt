@@ -1,0 +1,117 @@
+7、linux中的用户管理：
+   1)、任何使用linux的系统资源的用户，必须使用一个合法的账号和密码，账号和密码一般都是向系统管理员申请。
+       root是linux系统安装时默认创建的系统管理员账号，由root创建普通账号。
+   2)、添加用户：useradd [选项] 用户名
+       useradd lisi
+          |->创建一个用户lisi
+	  |->在/home目录下创建用的根目录，目录名称默认跟用户名相同
+	  |->在linux中任何一个用户都至少属于一个组，新建用户时如果不指定组，则会新建一个组，组名跟用户名相同，并且把该用户添加到该组中。
+
+       useradd -d /home/ww wangwu   创建用户的同时，指定用户的根目录
+    3)、给用户设置密码:passwd 用户名
+       passwd lisi
+       *密码要满足一定的复杂度
+    4)、删除用户：userdel 用户名
+       userdel lisi
+       userdel -r lisi 删除用户的同时级联删除它的主目录
+    5)、查看用户信息：id 用户名
+       id zhangsan
+    6)、切换用户：su 用户名
+       su zhangsan
+       *从权限高的用户切换权限低的用户，不需要密码验证；
+        从权限低的用户切换到权限高的用户，必须密码验证。
+8、linux中的组管理：
+    1)、linux中的组相当于角色的概念，可以对有共性的用户进行统一管理；
+        每一个用户至少属于一个组，不能独立于组存在，也可以属于多个组；
+	新建用户时如果不指定组，则会新建一个组，组名跟用户名相同，并且把该用户添加到该组中。
+    2)、添加组：groupadd 组名
+        groupadd dev
+    3)、删除组：groupdel 组名
+        groupdel dev
+    4)、把用户添加到组中：gpasswd -a 用户名 组名
+         gpasswd -a zhangsan dev
+    5)、把用户从组中移除：gpasswd -d 用户名 组名
+         gpasswd -d zhangsan dev
+    6)、添加用户时，指定所属的组(主组)：useradd -g 组名 用户名
+         useradd -g dev lisi
+9、linux中的系统操作命令：
+    关机：shutdown now  立即关机
+          shutdown -h xxx  定时关机
+	  shutdown -r now  立即重启
+   重启：reboot  立即重启
+   同步数据库：sync
+10、linux中的帮助命令：
+   1)、用来查看linux系统手册上的帮助信息：man 命令
+       man ls
+       分屏显示、按回车翻一行、按空格翻一页、按q退出查看。
+   2)、用来查看命名的内置帮助信息：help 命令
+       help cd
+11、linux中的文件和目录操作的命令：
+   1)、查看当前所在目录：pwd
+       pwd
+   2)、查看指定目录下所有的子目录和文件列表：ls [选项] [指定目录]
+                                                            |->绝对目录
+							    |->相对目录
+       ls /home
+       ls 查看当前目录下所有的子目录和文件列表
+
+       ls -l /home ：以列表形式显示
+       ls -a /home：显示指定目录下所有的子目录和文件(包括虚拟的目录)
+       ls -al /home:以列表形式显示指定目录下所有的子目录和文件(包括虚拟的目录)
+    3)、切换目录：cd 目录名
+                        |->绝对目录：以盘符开始的目录叫绝对目录，从盘符开始查找目标目录
+			             cd /opt/testDir
+				     ~：当前用户的根目录。在任何目录下执行:cd ~，进入当前用户的根目录。 
+			|->相对目录：以目录名开始的目录叫相对目录，从当前目录开始查找目标目录
+			             cd testDir
+				     ..:当前目录的上一级目录，从的当前目录开始查找它的上一级目录。 
+				     .:当前目录
+    				        xxx.sh====>./xxx.sh
+    4)创建目录：mkdir [选项] 目录名
+                                |->绝对目录
+			        |->相对目录
+		mkdir /opt/testDir/test1 //在/opt/testDir目录下创建一个目录test1(使用绝对目录)
+		mkdir test2 //在/opt/testDir目录下创建一个目录test2(使用相对目录)
+
+                mkdir -p /opt/testDir/test3/test4 //在/opt/testDir目录下创建目录test3，并且在test3下创建test4(一次创建多级目录)
+		mkdir -p test5/test6
+    5)、删除一个空目录：rmdir 目录名
+                rmdir test1
+		rmdir test3
+    6)、创建一个或者多个空文件：touch 文件名列表(文件名之间用空格隔开)
+                touch t1.txt
+                touch t2.txt t3.txt t4.txt
+    7)、复制文件或者目录：cp [选项] source(源) dest(目标)
+                cp t1.txt test2  //把t1.txt文件复制到test2目录中
+		cp -r test2 test5   //把test2目录复制到test5目录中(递归地复制目录)
+
+		cp t1.txt test2
+    8)、删除文件或者目录：rm 文件名或者目录名
+                rm t1.txt  提示删除文件
+		rm -f t2.txt  强制删除文件
+
+		rm -r test2  提示递归删除目录
+		rm -rf test5  强制递归删除目录
+    9)、移动目录或者文件：mv source(源) dest(目标)
+                mv test.txt test1
+		mv test1 test2
+		mv t3.txt t3_new.txt  文件重命名
+		*如果目标中已经存在该文件或者目录，则会提示是否覆盖。
+    10)、查看文件内容：cat 文件名
+                文件内容一次性显示出来。
+                cat t4.txt
+		cat -n t4.txt  显示行号
+    11)、分页查看文件文件内容：more 文件名  一次性加载文件所有内容到内存，分页显示
+                按回车翻一行、按空格翻一页
+                more t4.txt
+    12)、分页查看文件文件内容：less 文件名 分页加载文件所有内容到内存，分页显示
+                less t4.txt
+		按回车翻一行、按空格翻一页，按q退出查看
+    13)、查看文件的头10行：head [选项] 文件名
+                head t4.txt
+                head -n 5 t4.txt
+    14)、查看文件的后10行：tail [选项] 文件名
+               tail t4.txt
+	       tail -n 5 t4.txt
+
+        
